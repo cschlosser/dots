@@ -1,5 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-for dir in bat fzf ripgrep fish nvim; do
-  ln -s ~/dots/"$dir" ~/.config/
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+pushd $SCRIPT_DIR
+
+mkdir -p ~/.config
+pushd ~/.config
+for dir in bat fish fzf kitty nvim ripgrep; do
+  ln -s "${SCRIPT_DIR}/${dir}" .
 done
+popd
+
+pushd ~
+for f in $(find $SCRIPT_DIR -type f -name 'dot.*'); do
+  file="$(basename $f)"
+  ln -s "${SCRIPT_DIR}/${file}" "${file/dot/}"
+done
+popd
+
+popd
