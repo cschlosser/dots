@@ -1,0 +1,149 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+;background = ${xrdb:color0:#222}
+background = #222
+background-alt = #444
+;foreground = ${xrdb:color7:#222}
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/herbstluft]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 32
+dpi = 192
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-color = #00000000
+
+padding-left = 2
+padding-right = 4
+
+module-margin-left = 0
+module-margin-right = 1
+
+font-0 = Cousine NF:pixelsize=8;1
+font-1 = NotoSansM Nerd Font Mono:pixelsize=8;0
+font-2 = Siji:pixelsize=10;1
+
+modules-left = info-hlwm-workspaces xwindow
+modules-center =
+modules-right = cpu memory storage battery wifi volume date
+
+[module/volume]
+interval = 1
+type = custom/script
+exec = "~/.config/polybar/plat.sh vol"
+tail = true
+format-prefix = "VOL: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #C4C1DC
+
+[module/storage]
+interval = 1
+type = custom/script
+exec = "~/.config/polybar/plat.sh storage"
+tail = true
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #DE965D
+
+[module/battery]
+interval = 60
+type = custom/script
+exec = "~/.config/polybar/plat.sh battery"
+tail = true
+format-prefix = "BAT: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #C4C1DC
+
+[module/wifi]
+interval = 60
+type = custom/script
+exec = "~/.config/polybar/plat.sh wifi"
+tail = true
+format-prefix = "WIFI: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #DE965D
+
+[module/info-hlwm-workspaces]
+type = custom/script
+exec = ~/.config/polybar/info-hlwm-workspaces.sh
+tail = true
+scroll-up = herbstclient use_index -1 --skip-visible &
+scroll-down = herbstclient use_index +1 --skip-visible &
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:72:...%
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "CPU: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #DE965D
+label = %percentage:2%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "MEM: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #C4C1DC
+label = %percentage_used%%
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = "%d. %b"
+date-alt = " %Y-%m-%d"
+
+time-alt = %H:%M
+time = %H:%M:%S
+
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #DE965D
+
+label = %date% %time%
+
+;hidden = true
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
