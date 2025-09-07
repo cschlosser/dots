@@ -1,3 +1,5 @@
+. ~/.profile
+
 export TERMINAL=kitty
 # Some have success with these instead:
 #export GDK_DPI_SCALE=1.5
@@ -14,5 +16,12 @@ xrdb -merge ~/.Xresources
 # Polybar doesn't pick up the one from Xresources.
 xsetroot -cursor_name left_ptr
 
-. ~/.profile
+if command -v dbus-launch >/dev/null 2>&1; then
+    eval "$(dbus-launch --sh-syntax --exit-with-session)"
+fi
+
+if command -v pipewire >/dev/null 2>&1; then
+    pipewire&
+fi
+
 exec herbstluftwm --locked
