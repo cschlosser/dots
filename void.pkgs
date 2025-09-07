@@ -1,4 +1,7 @@
+acpi
 bc
 dbus
+dbus-x11
 dzen2
+pipewire
 xorg
