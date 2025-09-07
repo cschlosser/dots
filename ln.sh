@@ -5,7 +5,7 @@ pushd $SCRIPT_DIR
 
 mkdir -p ~/.config
 pushd ~/.config
-for dir in bat fish fzf kitty nvim ripgrep; do
+for dir in bat fish fzf herbstluftwm kitty nvim polybar ripgrep; do
   ln -s "${SCRIPT_DIR}/${dir}" .
 done
 popd
