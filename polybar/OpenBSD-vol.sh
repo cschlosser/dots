@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function sndio_val() {
-  sndioctl "$1" | awk -F'=' '{print $2}'
+  sndioctl "$1" 2> /dev/null | awk -F'=' '{print $2}'
 }
 
 while true; do
