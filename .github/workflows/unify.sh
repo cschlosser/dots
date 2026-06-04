@@ -81,6 +81,7 @@ while IFS=$'\t' read -r _ ci cn ce patch_file; do
         if ! GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
                 git -C "$OUTPUT" am --continue 2>/dev/null; then
             git -C "$OUTPUT" am --abort 2>/dev/null || true
+            rm -rf "$OUTPUT/.git/rebase-apply"
         fi
     fi
 done < <(sort -n -k1,1 -t$'\t' -s "$WORKDIR/manifest")
