@@ -26,7 +26,7 @@ echo "==> Preparing parent repo..."
 git clone --no-local "$SOURCE" "$WORKDIR/parent"
 git -C "$WORKDIR/parent" checkout pub
 git -C "$WORKDIR/parent" filter-repo \
-    --invert-paths --path nvim --path fish --path .gitmodules --force
+    --invert-paths --path nvim --path fish --path .gitmodules --path .github --force
 
 # Step 2: Rewrite each submodule's history into its subdirectory
 for sub in nvim fish; do
@@ -76,10 +76,12 @@ sort -n -k1,1 -t$'\t' -s "$WORKDIR/manifest" | while IFS=$'\t' read -r _ ci cn c
     [ -s "$patch_file" ] || continue
     if ! GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
             git -C "$OUTPUT" am --3way "$patch_file" 2>/dev/null; then
-        git -C "$OUTPUT" checkout --theirs . 2>/dev/null
-        git -C "$OUTPUT" add -A
-        GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
-            git -C "$OUTPUT" am --continue 2>/dev/null
+        git -C "$OUTPUT" checkout --theirs . 2>/dev/null || true
+        git -C "$OUTPUT" add -A 2>/dev/null || true
+        if ! GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
+                git -C "$OUTPUT" am --continue 2>/dev/null; then
+            git -C "$OUTPUT" am --skip 2>/dev/null || true
+        fi
     fi
 done
 
