@@ -72,7 +72,7 @@ for repo in parent nvim fish; do
     echo "$WORKDIR/$repo/.git/objects" >> "$OUTPUT/.git/objects/info/alternates"
 done
 
-sort -n -k1,1 -t$'\t' -s "$WORKDIR/manifest" | while IFS=$'\t' read -r _ ci cn ce patch_file; do
+while IFS=$'\t' read -r _ ci cn ce patch_file; do
     [ -s "$patch_file" ] || continue
     if ! GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
             git -C "$OUTPUT" am --3way "$patch_file" 2>/dev/null; then
@@ -80,10 +80,10 @@ sort -n -k1,1 -t$'\t' -s "$WORKDIR/manifest" | while IFS=$'\t' read -r _ ci cn c
         git -C "$OUTPUT" add -A 2>/dev/null || true
         if ! GIT_COMMITTER_NAME="$cn" GIT_COMMITTER_EMAIL="$ce" GIT_COMMITTER_DATE="$ci" \
                 git -C "$OUTPUT" am --continue 2>/dev/null; then
-            git -C "$OUTPUT" am --skip 2>/dev/null || true
+            git -C "$OUTPUT" am --abort 2>/dev/null || true
         fi
     fi
-done
+done < <(sort -n -k1,1 -t$'\t' -s "$WORKDIR/manifest")
 
 # Repack while alternates are still live, then remove them
 git -C "$OUTPUT" repack -a -d -q
